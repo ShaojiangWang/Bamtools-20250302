@@ -1,0 +1,46 @@
+# ==========================
+# BamTools CMakeLists.txt
+# (c) 2010 Derek Barnett
+#
+# src/toolkit
+# ==========================
+
+# set include path
+include_directories( ${BamTools_SOURCE_DIR}/src/api
+                     ${BamTools_SOURCE_DIR}/src/utils
+                     ${BamTools_SOURCE_DIR}/src/third_party
+)
+#set(CMAKE_LIBRARY_PATH $LD_LIBRARY_PATH)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+# compile main bamtools application
+add_executable( bamtools_cmd
+                bamtools_convert.cpp
+                bamtools_count.cpp
+                bamtools_coverage.cpp
+                bamtools_filter.cpp
+                bamtools_header.cpp
+                bamtools_index.cpp
+                bamtools_merge.cpp
+                bamtools_random.cpp
+                bamtools_resolve.cpp
+                bamtools_revert.cpp
+                bamtools_sort.cpp
+                bamtools_split.cpp
+                bamtools_stats.cpp
+                bamtools.cpp
+)
+
+# set BamTools application properties
+set_target_properties( bamtools_cmd PROPERTIES
+                       VERSION  2.5.11
+                       OUTPUT_NAME "bamtools"
+                     )
+# make version info available in application
+configure_file( bamtools_version.h.in ${BamTools_SOURCE_DIR}/src/toolkit/bamtools_version.h )
+
+# define libraries to link
+link_directories($ENV{LD_LIBRARY_PATH})
+target_link_libraries(bamtools_cmd BamTools BamTools-utils jsoncpp)
+
+# set application install destinations
+install( TARGETS bamtools_cmd DESTINATION "bin")

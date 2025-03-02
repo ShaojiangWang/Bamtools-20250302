@@ -1,0 +1,123 @@
+--------------------------------------------------------------------------------
+README : BAMTOOLS
+--------------------------------------------------------------------------------
+
+BamTools provides both a programmer's API and an end-user's toolkit for handling
+BAM files.
+
+I.   Learn More
+
+II.  License
+
+III. Acknowledgements
+
+IV.  Contact
+
+--------------------------------------------------------------------------------
+I. Learn More:
+--------------------------------------------------------------------------------
+
+Installation steps, tutorial, API documentation, etc. are all now available 
+through the BamTools project wiki:
+
+https://github.com/pezmaster31/bamtools/wiki
+
+Join the mailing list(s) to stay informed of updates or get involved with 
+contributing:
+
+https://github.com/pezmaster31/bamtools/wiki/Mailing-lists
+
+--------------------------------------------------------------------------------
+II. License :
+--------------------------------------------------------------------------------
+
+Both the BamTools API and toolkit are released under the MIT License.
+Copyright (c) 2009-2010 Derek Barnett, Erik Garrison, Gabor Marth,
+    Michael Stromberg
+
+See included file LICENSE for details.
+
+--------------------------------------------------------------------------------
+III. Acknowledgements :
+--------------------------------------------------------------------------------
+
+ * Aaron Quinlan for several key feature ideas and bug fix contributions
+ * Baptiste Lepilleur for the public-domain JSON parser (JsonCPP)
+ * Heng Li, author of SAMtools - the original C-language BAM API/toolkit.
+
+--------------------------------------------------------------------------------
+IV. Contact :
+--------------------------------------------------------------------------------
+
+Feel free to contact me with any questions, comments, suggestions, bug reports,
+    etc.
+
+Derek Barnett
+Marth Lab
+Biology Dept., Boston College
+
+Email: derekwbarnett@gmail.com
+Project Website: http://github.com/pezmaster31/bamtools
+
+-------------------------------
+Different build types
+-------------------------------
+mkdir Release
+cd Release
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+
+And for Debug (again from the root of your project):
+
+mkdir Debug
+cd Debug
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
+For testing, have to manually run the binary
+../bin/testbamalignment
+
+Automatic testing always crashes:
+[100%] Linking CXX executable ../../bin/testbamalignment
+CMakeFiles/testbamalignment.dir/testbamalignment.cpp.o: In function `BamAlignmentTest_pathEndSoftBack_Test::TestBody()':
+testbamalignment.cpp:(.text+0xa84): undefined reference to `testing::internal::GetBoolAssertionFailureMessage[abi:cxx11](testing::AssertionResult const&, char const*, char const*, char const*)'
+testbamalignment.cpp:(.text+0x13a9): undefined reference to `testing::internal::GetBoolAssertionFailureMessage[abi:cxx11](testing::AssertionResult const&, char const*, char const*, char const*)'
+CMakeFiles/testbamalignment.dir/testbamalignment.cpp.o: In function `BamAlignmentTest_pathEnd_Test::TestBody()':
+testbamalignment.cpp:(.text+0x2efc): undefined reference to `testing::internal::GetBoolAssertionFailureMessage[abi:cxx11](testing::AssertionResult const&, char const*, char const*, char const*)'
+testbamalignment.cpp:(.text+0x3720): undefined reference to `testing::internal::GetBoolAssertionFailureMessage[abi:cxx11](testing::AssertionResult const&, char const*, char const*, char const*)'
+CMakeFiles/testbamalignment.dir/testbamalignment.cpp.o: In function `BamAlignmentTest_pathEndBack_Test::TestBody()':
+testbamalignment.cpp:(.text+0x50be): undefined reference to `testing::internal::GetBoolAssertionFailureMessage[abi:cxx11](testing::AssertionResult const&, char const*, char const*, char const*)'
+CMakeFiles/testbamalignment.dir/testbamalignment.cpp.o:testbamalignment.cpp:(.text+0x5921): more undefined references to `testing::internal::GetBoolAssertionFailureMessage[abi:cxx11](testing::AssertionResult const&, char const*, char const*, char const*)' follow
+collect2: error: ld returned 1 exit status
+make[2]: *** [../bin/testbamalignment] Error 1
+make[1]: *** [test/CMakeFiles/testbamalignment.dir/all] Error 2
+make: *** [all] Error 2
+
+My solution is to manually edit the configure file: 
+
+enable_testing()
+add_subdirectory( src )
+add_subdirectory( test )
+
+Comment out: enable_testing(); and add_subdirectory(test)
+For production version.
+
+To build documents
+
+cd docs
+doxygen 
+This will produce html directory for distribution to a web server.
+
+How to make a distribution?
+I have added some package functionality
+
+** make package_source **
+===================
+cd build
+rm -rf * # you must remove everything othewise cmake will hung
+cmake ..
+make package_source
+=====================
+will genrate source distribution in different formats
+There is a bug in cmake, you have to clean the build directory 
+first before running this command otherwise it will hung 
+there forever.
